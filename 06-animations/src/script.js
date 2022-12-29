@@ -67,14 +67,14 @@ gsap.to(mesh.position, {duration: 1, delay: 2, x: 0})
 
 const tick = () =>
 {
-    // const elapsedTime = clock.getElapsedTime()
+    const elapsedTime = clock.getElapsedTime()
 
     // Update objects
-    // mesh.rotation.x = elapsedTime * Math.PI * 0.5
-    // mesh.rotation.y = elapsedTime * Math.PI * 0.5
-    // camera.position.x = Math.cos(elapsedTime)
-    // camera.position.y = Math.sin(elapsedTime)
-    // camera.lookAt(mesh.position)
+    mesh.rotation.x = elapsedTime * Math.PI * 0.5
+    mesh.rotation.y = elapsedTime * Math.PI * 0.5
+    camera.position.x = Math.cos(elapsedTime)
+    camera.position.y = Math.sin(elapsedTime)
+    camera.lookAt(mesh.position)
 
     // Render
     renderer.render(scene, camera)

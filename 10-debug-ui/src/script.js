@@ -36,6 +36,8 @@ thirdTorusKnot.scale.set(0.08, 0.08, 0.08)
 thirdTorusKnot.position.x = 3
 scene.add( thirdTorusKnot );
 
+
+
 /**
  * Sizes
  */
@@ -168,6 +170,5 @@ gui
 
 gui.add(thirdTorusKnot, 'visible').name('Thorus visibility')
 gui.add(thirdMaterial, 'wireframe').name('Thorus Wireframe')
-    
 
 gui.add(parameters, 'spin')

@@ -1,7 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { DoubleSide } from 'three'
+import { CubeTextureLoader, DoubleSide } from 'three'
 import * as dat from 'lil-gui'
 
 /**
@@ -11,6 +11,7 @@ import * as dat from 'lil-gui'
 // Textures
 
 const textureLoader = new THREE.TextureLoader()
+const cubeTextureLoader = new THREE.CubeTextureLoader()
 
 const doorColorTexture = textureLoader.load('textures/door/color.jpg')
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
@@ -22,9 +23,20 @@ const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 const matcapTexture = textureLoader.load('/textures/matcaps/8.png')
 const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
 
-// gradientTexture.minFilter = THREE.NearestFilter
-// gradientTexture.magFilter = THREE.NearestFilter
-// gradientTexture.generateMipmaps = false
+gradientTexture.minFilter = THREE.NearestFilter
+gradientTexture.magFilter = THREE.NearestFilter
+gradientTexture.generateMipmaps = false
+
+
+const environmentMapTexture = cubeTextureLoader.load([
+    'textures/environmentMaps/4/px.png',
+    'textures/environmentMaps/4/nx.png',
+    'textures/environmentMaps/4/py.png',
+    'textures/environmentMaps/4/ny.png',
+    'textures/environmentMaps/4/pz.png',
+    'textures/environmentMaps/4/nz.png',
+]
+)
 
 
 // Canvas
@@ -95,11 +107,31 @@ const scene = new THREE.Scene()
 
 // // MESH STANDARD MATERIAL
 
+// const material = new THREE.MeshStandardMaterial()
+
+// material.metalness = 0
+// material.roughness = 1
+// material.side = DoubleSide
+// material.map = doorColorTexture
+// material.aoMap = doorAmbientOcclusionTexture
+// material.aoMapIntensity = 1
+// material.displacementMap = doorHeightTexture
+// material.displacementScale = 0.05
+// material.metalnessMap = doorMetalnessTexture
+// material.roughnessMap = doorRoughnessTexture
+// material.normalMap = doorNormalTexture
+// material.normalScale.set(0.5, 0.5)
+// material.transparent = true
+// material.alphaMap = doorAlphaTexture
+
+// // material.wireframe = true
+
+
 const material = new THREE.MeshStandardMaterial()
 
-material.metalness = 0.5
-material.roughness = 0.5
-material.side = DoubleSide
+material.metalness = 0.7
+material.roughness = 0.2
+material.envMap = environmentMapTexture
 
 
 /**
@@ -118,29 +150,36 @@ scene.add(pointLight)
 
 
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 16, 16),
+    new THREE.SphereGeometry(0.5, 64, 64),
     material
 )
 
 sphere.position.x = -1.5
 
+sphere.geometry.setAttribute('uv2', new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2))
+
 const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1),
+    new THREE.PlaneGeometry(1, 1, 100, 100),
     material
 )
 
+plane.geometry.setAttribute('uv2', new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2))
+
 const torus = new THREE.Mesh(
-    new THREE.TorusGeometry(0.3, 0.2, 16, 22),
+    new THREE.TorusGeometry(0.3, 0.2, 64, 128),
     material
 )
 torus.position.x = 1.5
 
 scene.add(sphere, plane, torus)
 
+torus.geometry.setAttribute('uv2', new THREE.BufferAttribute(torus.geometry.attributes.uv.array, 2))
+
 
 /**
  * Sizes
  */
+
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -224,3 +263,6 @@ const gui = new dat.GUI()
 
 gui.add(material, 'metalness').min(0).max(1).step(0.0001)
 gui.add(material, 'roughness').min(0).max(1).step(0.0001)
+gui.add(material, 'displacementScale').min(0).max(2).step(0.0001)
+gui.add(material, 'aoMapIntensity').min(0).max(10).step(0.01)
+gui.add(material, 'wireframe')

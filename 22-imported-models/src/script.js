@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 /**
  * Base
@@ -13,6 +15,37 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * Models
+ */
+
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+gltfLoader.load(
+    // '/models/Duck/glTF/Duck.gltf',
+    // '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    // '/models/Duck/glTF-Binary/Duck.glb', // glTF-Binary
+    // '/models/Duck/glTF-Embedded/Duck.gltf', // glTF-Embedded
+    '/models/Duck/glTF-Draco/Duck.gltf', 
+    (gltf) =>
+    {
+        // while(gltf.scene.children.length)
+        // {
+        //     scene.add(gltf.scene.children[0])
+        // }
+
+        // const children = [...gltf.scene.children]
+        // for(const child of children)
+        // {
+        //     scene.add(child)
+        // }
+        scene.add(gltf.scene)
+    }
+)
 
 /**
  * Floor

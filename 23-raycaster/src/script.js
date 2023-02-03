@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import {GLTFLoader}  from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 /**
  * Base
@@ -134,6 +135,34 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+const gltfLoader = new GLTFLoader()
+
+let model = null
+
+gltfLoader.load(
+    './Duck/glTF-Binary/Duck.glb',
+    (gltf) =>
+    {
+        model = gltf.scene
+        model.position.y = -1.2
+        scene.add(model)
+    }
+)
+
+/**
+ * Light
+ */
+
+//Ambient Light
+
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.3)
+scene.add(ambientLight)
+
+// Directionnal Light
+const directionalLight = new THREE.DirectionalLight('#ffffff', 0.7)
+directionalLight.position.set(1, 2, 3)
+scene.add(directionalLight)
+
 /**
  * Animate
  */
@@ -205,6 +234,19 @@ const tick = () => {
     }
 
 
+    //Test intersect with model
+    if(model)
+    {
+        const modelIntersects = raycaster.intersectObject(model)
+        if (modelIntersects.length)
+        {
+            model.scale.set(1.2, 1.2, 1.2)
+        } else
+        {
+            model.scale.set(1, 1, 1)
+        }
+    }
+
     // Update controls
     controls.update()
 
@@ -216,3 +258,4 @@ const tick = () => {
 }
 
 tick()
+

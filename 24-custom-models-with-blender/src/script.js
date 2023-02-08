@@ -32,8 +32,10 @@ gltfLoader.load(
     (gltf) =>
     {
         scene.add(gltf.scene)
+        gltf.scene.scale.set(10, 10, 10)
     }
 )
+
 
 /**
  * Floor

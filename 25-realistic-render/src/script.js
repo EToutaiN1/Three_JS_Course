@@ -39,6 +39,9 @@ const updateAllMaterials = () =>
             child.material.envMapIntensity = 2.5
 
             child.material.envMapIntensity = debugObject.envMapIntensity
+
+            child.castShadow = true
+            child.receiveShadow = true
         }
     })
 }
@@ -67,12 +70,31 @@ scene.environment = environmentMap
  * Models
  */
 
+// gltfLoader.load(
+//     'models/FlightHelmet/glTF/FlightHelmet.gltf',
+//     (gltf) =>
+//     {
+//         gltf.scene.scale.set(10, 10, 10)
+//         gltf.scene.position.set(0, -4, 0)
+//         gltf.scene.rotation.y = Math.PI * 0.5
+//         scene.add(gltf.scene)
+
+//         gui
+//         .add(gltf.scene.rotation, 'y')
+//         .min(-Math.PI)
+//         .max(Math.PI)
+//         .step(0.001)
+//         .name('rotation')
+        
+//         updateAllMaterials()
+//     }
+//     )
 gltfLoader.load(
-    'models/FlightHelmet/glTF/FlightHelmet.gltf',
+    'models/hamburger.glb',
     (gltf) =>
     {
-        gltf.scene.scale.set(10, 10, 10)
-        gltf.scene.position.set(0, -4, 0)
+        gltf.scene.scale.set(0.3, 0.3, 0.3)
+        gltf.scene.position.set(0, -1, 0)
         gltf.scene.rotation.y = Math.PI * 0.5
         scene.add(gltf.scene)
 
@@ -93,7 +115,15 @@ gltfLoader.load(
     
     const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
 directionalLight.position.set(0.25, 3, -2.25)
+directionalLight.castShadow = true
 scene.add(directionalLight)
+
+// const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+// scene.add(directionalLightCameraHelper)
+
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.normalBias = 0.05
 
 gui.add(directionalLight, 'intensity').min(0).max(10).step(0.001).name('lightIntensity')
 gui.add(directionalLight.position, 'x').min(-5).max(5).step(0.001).name('lightX')
@@ -149,6 +179,8 @@ renderer.physicallyCorrectLights = true
 renderer.outputEncoding = THREE.sRGBEncoding
 renderer.toneMapping = THREE.ReinhardToneMapping
 renderer.toneMappingExposure = 3
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 gui.add(renderer, 'toneMapping', {
     No: THREE.NoToneMapping,

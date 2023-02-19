@@ -1,0 +1,48 @@
+/* *
+{
+    margin: 0;
+    padding: 0;
+} */
+
+body
+{
+    overflow: hidden;
+}
+
+.webgl
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+}
+
+/* Test slider part */
+
+.n{
+    position: absolute;
+    top: 100px;
+    width: 200px;
+    height: 10px;
+    background-color: black;
+}
+
+.n1{
+    top: 200px;
+}
+.n2{
+    top: 300px;
+}
+.n3{
+    top: 400px;
+}
+.n4{
+    top: 500px;
+}
+
+#block{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: absolute;
+}

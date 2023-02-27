@@ -47,3 +47,14 @@ body
     background: red;
     position: absolute;
 }
+
+.circle{
+    width: 5rem;
+    height: 5rem;
+    position: absolute;
+    background-color: red;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 50%);
+    z-index: 10000;
+}

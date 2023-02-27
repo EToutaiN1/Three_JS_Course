@@ -89,40 +89,52 @@ for (let i = 0; i < textures.length; i++) {
     
 }
 
+const circle = document.querySelector('.circle')
+
+circle.addEventListener('click', ()=>{
+    console.log('click');
+    gsap.fromTo('.circle',{rotation: 0, x: 2}, {
+        rotation: 360,
+        x: 10,
+        duration: 1.5,
+        ease: 'power3.out'
+    });
+})
+
 let clickedPlane = {}
 
 const scrollEvent = () => {
     document.addEventListener('mousewheel', (e)=>{
         scrollTarget = e.wheelDelta * 0.3;
-        // if (clickedPlane !== null) {
-        //     clickedPlane.isClicked = false
-        //     clickedPlane = null
-        //     planes.forEach((plane) => {
-        //     gsap.to(plane.slide.scale, {
-        //     x: 1,
-        //     duration: 0.8,
-        //     ease: "power4.out"
-        //     })
-        //     gsap.to(plane.slide.scale, {
-        //     y: 1,
-        //     duration: 0.8,
-        //     ease: "power4.out"
-        //     })
-        //     gsap.to(plane.slide.position, {
-        //     x: 2.2 * plane.index - scrollTarget,
-        //     duration: 0.8,
-        //     ease: "power4.out"
-        //     })
-        // })
-        // } else {
-        //     planes.forEach((plane) => {
-        //         gsap.to(plane.slide.position, {
-        //         x: 2.2 * plane.index - scrollTarget,
-        //         duration: 0.8,
-        //         ease: "power4.out"
-        //         })
-        //     })
-        // }
+        if (clickedPlane !== null) {
+            clickedPlane.isClicked = false
+            clickedPlane = null
+            planes.forEach((plane) => {
+            gsap.fromTo(plane.slide.scale, {x: 1.5}, {
+            x: 1,
+            duration: 0.8,
+            ease: "power4.out"
+            })
+            gsap.fromTo(plane.slide.scale, {y: 1.5}, {
+            y: 1,
+            duration: 0.8,
+            ease: "power4.out"
+            })
+            gsap.fromTo(plane.slide.position, {x: 0}, {
+            x: 2.2 * plane.index - scrollTarget,
+            duration: 0.8,
+            ease: "power4.out"
+            })
+        })
+        } else {
+            planes.forEach((plane) => {
+                gsap.fromTo(plane.slide.position, {x: 0}, {
+                x: 2.2 * plane.index - scrollTarget,
+                duration: 0.8,
+                ease: "power4.out"
+                })
+            })
+        }
     })
 }
 
@@ -202,12 +214,12 @@ const handleOutsideClick = (event) => {
         console.log('handle outside click');
         // Reset planes size and position
         planes.forEach((plane) => {
-            gsap.to(plane.slide.scale, {
+            gsap.fromTo(plane.slide.scale,{x: 0}, {
                 x: 1,
                 duration: 1.5,
                 ease: 'power3.out'
             });
-            gsap.to(plane.slide.position, {
+            gsap.fromTo(plane.slide.position,{x: 0}, {
                 x: (2.2 * plane.index) % (2.2 * textures.length) - 2.2 * textures.length / 2,
                 duration: 1.5,
                 ease: 'power3.out' 
@@ -327,7 +339,7 @@ planes.forEach((plane, index) => {
             zoomRatio: 1,
             duration: 1,
             onUpdate: () => {
-                clickedPlane.slide.scale.set(clickedPlane.targetScale.x * clickedPlane.zoomRatio, clickedPlane.targetScale.y * clickedPlane.zoomRatio, 1)
+                clickedPlane.scale.set(clickedPlane.targetScale.x * clickedPlane.zoomRatio, clickedPlane.targetScale.y * clickedPlane.zoomRatio, 1)
             },
             onComplete: () => {
                 isZooming = false
@@ -407,8 +419,14 @@ function onCanvasClick(event) {
         // Animate the clicked plane to expand to 1.79/1 ratio
         const clickedPlane = intersectsCanvasClick[0].object
         const clickedIndex = planes.findIndex(({ slide }) => slide === clickedPlane)
-        gsap.to(clickedPlane.scale, {
+        console.log(clickedPlane);
+        gsap.fromTo(clickedPlane.scale,{x: 1}, {
         x: 1.79,
+        duration: 0.5,
+        ease: 'power2.out',
+        })
+        gsap.to(clickedPlane.rotation, {
+        x: 6,
         duration: 0.5,
         ease: 'power2.out',
         })
@@ -416,7 +434,7 @@ function onCanvasClick(event) {
         // Scale down all other planes
         planes.forEach(({ slide, index }) => {
         if (index !== clickedIndex) {
-            gsap.to(slide.scale, {
+            gsap.fromTo(slide.scale, {x: 1}, {
             x: 0.5,
             duration: 0.5,
             ease: 'power2.out',
@@ -425,7 +443,7 @@ function onCanvasClick(event) {
         })
 
         // Animate the clicked plane to the center of the screen
-        gsap.to(clickedPlane.position, {
+        gsap.fromTo(clickedPlane.position,{x: 1}, {
         x: 0,
         duration: 0.5,
         ease: 'power2.out',
@@ -433,7 +451,7 @@ function onCanvasClick(event) {
             // Double the margin with the other planes
             planes.forEach(({ slide, index }) => {
             if (index !== clickedIndex) {
-                gsap.to(slide.position, {
+                gsap.fromTo(slide.position, {x: 0}, {
                 x: (margin * index + currentScroll + 4069 * wholeWidth) % wholeWidth - 6 * margin,
                 duration: 0.5,
                 ease: 'power2.out',
@@ -448,12 +466,12 @@ function onCanvasClick(event) {
         isPlaneClicked = false
 
         planes.forEach(({ slide, index }) => {
-        gsap.to(slide.scale, {
+        gsap.fromTo(slide.scale, {x: 1.78},{
             x: 1,
             duration: 0.5,
             ease: 'power2.out',
         })
-        gsap.to(slide.position, {
+        gsap.fromTo(slide.position, {x: 1},{
             x: (margin * index + currentScroll + 4069 * wholeWidth) % wholeWidth - 3 * margin,
             duration: 0.5,
             ease: 'power2.out',

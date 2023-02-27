@@ -94,35 +94,35 @@ let clickedPlane = {}
 const scrollEvent = () => {
     document.addEventListener('mousewheel', (e)=>{
         scrollTarget = e.wheelDelta * 0.3;
-        if (clickedPlane !== null) {
-            clickedPlane.isClicked = false
-            clickedPlane = null
-            planes.forEach((plane) => {
-            gsap.to(plane.slide.scale, {
-            x: 1,
-            duration: 0.8,
-            ease: "power4.out"
-            })
-            gsap.to(plane.slide.scale, {
-            y: 1,
-            duration: 0.8,
-            ease: "power4.out"
-            })
-            gsap.to(plane.slide.position, {
-            x: 2.2 * plane.index - scrollTarget,
-            duration: 0.8,
-            ease: "power4.out"
-            })
-        })
-        } else {
-            planes.forEach((plane) => {
-                gsap.to(plane.slide.position, {
-                x: 2.2 * plane.index - scrollTarget,
-                duration: 0.8,
-                ease: "power4.out"
-                })
-            })
-        }
+        // if (clickedPlane !== null) {
+        //     clickedPlane.isClicked = false
+        //     clickedPlane = null
+        //     planes.forEach((plane) => {
+        //     gsap.to(plane.slide.scale, {
+        //     x: 1,
+        //     duration: 0.8,
+        //     ease: "power4.out"
+        //     })
+        //     gsap.to(plane.slide.scale, {
+        //     y: 1,
+        //     duration: 0.8,
+        //     ease: "power4.out"
+        //     })
+        //     gsap.to(plane.slide.position, {
+        //     x: 2.2 * plane.index - scrollTarget,
+        //     duration: 0.8,
+        //     ease: "power4.out"
+        //     })
+        // })
+        // } else {
+        //     planes.forEach((plane) => {
+        //         gsap.to(plane.slide.position, {
+        //         x: 2.2 * plane.index - scrollTarget,
+        //         duration: 0.8,
+        //         ease: "power4.out"
+        //         })
+        //     })
+        // }
     })
 }
 

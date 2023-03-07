@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as dat from 'lil-gui'
+import * as bodymovin from 'lottie-web'
 import { Vector2 } from 'three'
 import { gsap } from 'gsap';
 import vertexShader from './shaders/slide-period/vertex.glsl'
@@ -23,7 +24,14 @@ let alreadyClicked = false;
 
 let isRepeated = false;
 
+let clickedId;
 
+const titleElement = document.getElementById('title-period');
+
+const tunnerBox = document.getElementById('tunner-box')
+const tunnerText = document.getElementById('tunner-text')
+
+let animation = []
 
 let logoAnimate = bodymovin.loadAnimation({
 
@@ -37,12 +45,16 @@ let logoAnimate = bodymovin.loadAnimation({
     
     autoplay: true,
     
-    name: "Logo Animation",
+    name: "Logo Animation"
     
 });
 
-let tunnerLoad = bodymovin.loadAnimation({
 
+
+// animation.push(logoAnimate)
+
+let tunnerLoad = bodymovin.loadAnimation({
+    
     container: document.getElementById('tunner-load'),
     
     path: '../animations/tunner-load.json',
@@ -90,8 +102,9 @@ let tunnerClick = bodymovin.loadAnimation({
     name: "Tunner click Animation",
 });
 
+animation.push(logoAnimate, tunnerLoad, tunnerNext, tunnerClick)
 
-
+console.log(animation);
 
 // Debug
 const gui = new dat.GUI()
@@ -112,58 +125,80 @@ const rapPeriodData = {
     0: {
         textureUrl: 'images/first-steps-of-hip-hop.jpg',
         color: '#6B84C9',
-        titlePeriod: 'The first steps of hip-hop',
-        period: "70"
+        firstTitlePeriod: 'The first steps',
+        secondTitlePeriod: 'of hip-hop',
+        period: "70'",
+        urlPeriod: 'raps-station.webflow.io/first-step-of-hip-hop'
     },
     1: {
         textureUrl: 'images/the-sounds-of-rap.jpg',
         color: '#6BC1C6',
-        titlePeriod: 'The sounds of rap',
-        period: "75"
+        firstTitlePeriod: 'The sounds',
+        secondTitlePeriod: 'of rap',
+        period: "75'",
+        urlPeriod: 'raps-station.webflow.io/the-sounds-of-rap'
     },
     2: {
         textureUrl: 'images/substance-before-form.jpg',
         color: '#6BC1C6',
-        titlePeriod: 'Substance before form',
-        period: "75"
+        firstTitlePeriod: 'Substance',
+        secondTitlePeriod: 'before form',
+        period: "75'",
+        urlPeriod: 'raps-station.webflow.io/substance-before-form'
     },
     3: {
         textureUrl: 'images/golden-age.jpg',
         color: '#6BC1C6',
-        titlePeriod: 'Golden Age',
-        period: "75"
+        firstTitlePeriod: 'Golden Age',
+        secondTitlePeriod: '',
+        period: "75'",
+        urlPeriod: 'raps-station.webflow.io/golden-age'
     },
     4: {
         textureUrl: 'images/new-school.jpg',
         color: '#EFEF3C',
-        titlePeriod: 'New School',
-        period: "80"
+        firstTitlePeriod: 'New School',
+        secondTitlePeriod: '',
+        period: "80'",
+        urlPeriod: 'raps-station.webflow.io/new-school'
     },
     5: {
         textureUrl: 'images/rap-explosion.jpg',
         color: '#FF7900',
-        titlePeriod: 'Rap Explosion',
-        period: "85"
+        firstTitlePeriod: 'Rap Explosion',
+        secondTitlePeriod: '',
+        period: "85'",
+        urlPeriod: 'raps-station.webflow.io/rap-explosion'
     },
     6: {
         textureUrl: 'images/g-funk.jpg',
         color: '#DD2626',
-        titlePeriod: 'G-Funk',
-        period: "90"
+        firstTitlePeriod: 'G-Funk',
+        secondTitlePeriod: '',
+        period: "90'",
+        urlPeriod: 'raps-station.webflow.io/g-funk'
     },
     7: {
         textureUrl: 'images/after-math.jpg',
         color: '#5EA53D',
-        titlePeriod: 'After Math',
-        period: "95"
+        firstTitlePeriod: 'After Math',
+        secondTitlePeriod: '',
+        period: "95'",
+        urlPeriod: 'raps-station.webflow.io/after-math'
     },
     8: {
         textureUrl: 'images/post-2000.jpg',
         color: '#8E4267',
-        titlePeriod: 'Post 2000',
-        period: "2000"
+        firstTitlePeriod: 'Post 2000',
+        secondTitlePeriod: '',
+        period: "00'",
+        urlPeriod: 'raps-station.webflow.io/post-2000'
     },
 }
+
+/**
+ * Initialise text tunner
+ */
 
 
 
@@ -280,26 +315,24 @@ const scrollEvent = (e) => {
         // console.log(Math.abs(position));
 
         // Get the current vertical scroll position
-        // const scrollPosition = Math.abs(position);
+        const scrollPosition = Math.abs(position);
 
         // console.log(tunnerNext);
         // console.log(scrollPosition);
 
-        // // Calculate the desired progress of the tunnerNext animation
-        // const animationDuration = tunnerNext.totalFrames / tunnerNext.frameRate;
-        // const animationProgress = Math.min((scrollPosition / animationDuration), 1);
-        // const animationFrame = Math.round(animationProgress * tunnerNext.totalFrames);
+        // Calculate the desired progress of the tunnerNext animation
+        const animationDuration = tunnerNext.totalFrames / tunnerNext.frameRate;
+        const animationProgress = Math.min((scrollPosition / animationDuration), 1);
+        const animationFrame = Math.round(animationProgress * tunnerNext.totalFrames);
 
-        // // Set the current frame of the tunnerNext animation
-        // tunnerNext.goToAndStop(animationFrame);
+        // Set the current frame of the tunnerNext animation
+        tunnerNext.goToAndStop(animationFrame);
     }
 
     if(!clickEnabled){
         window.addEventListener('wheel', scrollWhilePlaneClicked)
     }
-};  
-
-
+};
 
 window.addEventListener('wheel', scrollEvent)
 
@@ -343,48 +376,11 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 // Manage the hover effect on the different slides
-const hoverSlide = (event) =>{
-    // console.log('mouseHover');
-
-    // slides.forEach((o) => {
-    //     // Calculate mouse position in normalized device coordinates (-1 to +1)
-    //     mouse.x = (event.clientX / sizes.width) * 2 - 1;
-    //     mouse.y = -(event.clientY / sizes.height) * 2 + 1;
-        
-    //     // Raycast from camera to mouse position
-    //     raycaster.setFromCamera(mouse, camera);
-    //     const intersects = raycaster.intersectObjects(scene.children);
-
-        
-    //     if(intersects.length > 0)
-    //     {
-    //         if (intersects[0].object.geometry.isBufferGeometry){
-    //             hoveredSlide = intersects[0].object
-    //             // console.log(hoveredSlide.material);
-    //             gsap.to(hoveredSlide.material.uniforms.filterIntensity, {
-    //                 value: 0,
-    //                 duration: 1.5,
-    //                 ease: 'power3.out'
-    //             })
-    //         }
-    //     }
-    // })
-}
 
 // Handle plane click
 const handlePlaneClick = (event) => {
 
     if(clickEnabled){
-
-        // Hide the tunnerNext element
-        tunnerNextItem.style.display = 'none';
-
-        // Show the tunnerClick element
-        tunnerClickItem.style.display = 'block';
-
-        // Play the tunnerClick animation
-        tunnerClick.setDirection(1);
-        tunnerClick.play();
         
         // Calculate mouse position in normalized device coordinates (-1 to +1)
         mouse.x = (event.clientX / sizes.width) * 2 - 1;
@@ -400,8 +396,43 @@ const handlePlaneClick = (event) => {
                 clickEnabled = false
                 // console.log('you clicked on the plane :', intersects[0].object.id % 9);
                 clickedPlane = intersects[0].object;
+
+                clickedId = clickedPlane.material.id
+
+                // Get the title period for this slide
+                const firstTitlePeriod = rapPeriodData[clickedId-1].firstTitlePeriod;
+                const secondTitlePeriod = rapPeriodData[clickedId-1].secondTitlePeriod;
+
+                // Update the content of the H1 element
+                titleElement.innerHTML = firstTitlePeriod + '<br>' + secondTitlePeriod;
+
+                titleElement.classList.add('show');
+
+                // Get the title period for this slide
+                const periodTunnerText = rapPeriodData[clickedId- 1].period
+
+                // Update the content of the H1 element
+                tunnerText.innerHTML = periodTunnerText
+
+                // Get the URL for this slide
+                const url = rapPeriodData[clickedId-1].urlPeriod;
+
+                // console.log(url);
+
+                // Update the link for the button
+                // button.href = url;
+
+                // Hide the tunnerNext element
+                tunnerNextItem.style.display = 'none';
+
+                // Show the tunnerClick element
+                tunnerClickItem.style.display = 'block';
+
+                // Play the tunnerClick animation
+                tunnerClick.setDirection(1);
+                tunnerClick.play();
                 
-                // console.log(clickedPlane);
+                console.log(clickedPlane);
                 
                 // Increase clicked plane size
                 gsap.to(clickedPlane.scale, {
@@ -459,30 +490,71 @@ const handlePlaneClick = (event) => {
                 });
 
                 // Animate the color change of HTML elements
-                // gsap.to('.navlink', {
-                //     color: clickedSlideData.color,
-                //     duration: 1.5,
-                //     ease: "power3.out"
-                // });
+                gsap.to('.navlink a', {
+                    color: rapPeriodData[clickedId - 1].color,
+                    duration: 1,
+                    ease: "power3.out"
+                });
                 
-                // gsap.to('p', {
-                //     color: clickedSlideData.color,
-                //     duration: 1.5,
-                //     ease: "power3.out"
-                // });
+                gsap.to('p', {
+                    color: rapPeriodData[clickedId - 1].color,
+                    duration: 1,
+                    ease: "power3.out"
+                });
                 
-                // // Animate the color change of the Lottie animation elements
-                // animation.addEventListener('DOMLoaded', function() {
-                //     var layer = animation.layers.find(l => l.nm === 'myLayerName');
-                //     var tl = gsap.timeline({paused: true});
-                //     tl.to(layer, {duration: 1.5, colorProps: {fill: clickedSlideData.color}});
-                //     tl.restart();
-                // });
+                // Animate the color change of the Lottie animation elements
+
+
+                
+                animation.forEach((anim)=>{
+                    // let layer = animation[anim]
+                    // var tl = gsap.timeline({paused: true});
+                    // tl.to(layer, {duration: 1.5, colorProps: {fill: rapPeriodData[clickedId - 1].color}});
+
+                    // // Get the hierarchy object of the animation
+                    // const hierarchy = anim.getHierarchy();
+    
+                    // // Iterate over the shapes in the hierarchy
+                    // hierarchy.forEach((shape) => {
+                    // // Get the paths in the shape
+                    //     const paths = shape.paths;
+        
+                    //     // Iterate over the paths in the shape
+                    //     paths.forEach((path) => {
+                    //         // Set the stroke color of the path
+                    //         path.stroke = rapPeriodData[clickedId - 1].color;
+                    //     });
+                    // });
+
+                    // Change the color of all paths
+                    // for (let i = 0; i < anim.renderer.elements.length; i++) {
+                    //     const element = anim.renderer.elements[i];
+                    //     console.log(element.shapes[0]);
+                    //     if (element.shapes) {
+                    //         for (let j = 0; j < element.shapes.length; j++) {
+                    //             const path = element.shapes[j];
+                    //             path.updateRender = true;
+                    //             path.fill = '#f00'; // replace this with the desired color
+                    //             // path.stroke = '#f00'; // replace this with the desired color
+                    //         }
+                    //     }
+                    // }
+                    // const paths = anim.renderer.elements;
+                    // const pathKeys = Object.keys(paths);
+
+                    // // Loop through the path elements and modify their stroke color
+                    // pathKeys.forEach(key => {
+                    //     paths[key].updateRenderConfig({
+                    //         stroke: '#ff0000'
+                    //     });
+                    // });
+
+                    // tl.restart();
+                })
 
                 // Toggle the texture repeat and offset values
                 const repeatValue = isRepeated ? 0.5 : 1;
                 const offsetValue = isRepeated ? new THREE.Vector2(0.25, 0.25) : new THREE.Vector2(0, 0);
-
                 
                 // console.log(clickedPlane.material.uniforms.uRepeat);
                 
@@ -507,6 +579,10 @@ const handlePlaneClick = (event) => {
 
             }
 
+            // tunner text
+
+            tunnerBox.style.top = '-20%';
+
             // Stop listening to click events for the different slides
             window.removeEventListener('click', handlePlaneClick);
             console.log('plane click event disabled');
@@ -520,6 +596,8 @@ const handlePlaneClick = (event) => {
     }
 };
 
+console.log(document.querySelectorAll('.stroke-color'));
+
 window.addEventListener('click', handlePlaneClick)
 
 const scrollWhilePlaneClicked = () => {
@@ -528,6 +606,8 @@ const scrollWhilePlaneClicked = () => {
     // Play the animation in reverse
     tunnerClick.setDirection(-1);
     tunnerClick.play();
+
+    titleElement.classList.remove('show');
 
     // Delay hiding the tunnerClickItem element by 2 seconds
     setTimeout(() => {
@@ -576,7 +656,9 @@ const scrollWhilePlaneClicked = () => {
         duration: 1,
         ease: "power2.out"
     });
-    
+
+    tunnerBox.style.top = '-60%';
+
     clickEnabled = true
     clickedPlane = null
     
@@ -597,19 +679,6 @@ const handleOutsideClick = (event) => {
     
     if (!clickEnabled) {
         // console.log(clickedPlane);
-
-        // Play the tunnerClick animation
-        // Play the animation in reverse
-        tunnerClick.setDirection(-1);
-        tunnerClick.play() // Play the animation in reverse
-
-        setTimeout(() => {
-            // Hide the tunnerClick element
-            tunnerClickItem.style.display = 'none';
-        
-            // Show the tunnerNext element
-            tunnerNextItem.style.display = 'block';
-        }, 1300);
         
         // Calculate mouse position in normalized device coordinates (-1 to +1)
         mouse.x = (event.clientX / sizes.width) * 2 - 1;
@@ -630,6 +699,20 @@ const handleOutsideClick = (event) => {
 
             // Check if the clicked plane was already clicked
             if (intersectsOutsideClick.length == 0 || (!(intersectsOutsideClick[0].object == clickedPlane))) {
+                // Play the tunnerClick animation
+                tunnerClick.setDirection(-1);
+                tunnerClick.play() // Play the animation in reverse
+
+                setTimeout(() => {
+                    // Hide the tunnerClick element
+                    tunnerClickItem.style.display = 'none';
+                
+                    // Show the tunnerNext element
+                    tunnerNextItem.style.display = 'block';
+                }, 1300);
+
+                titleElement.classList.remove('show');
+
                 console.log('handle outside click');
 
                 // Reset slides size and position
@@ -670,6 +753,8 @@ const handleOutsideClick = (event) => {
                     duration: 1,
                     ease: "power2.out"
                 });
+
+                tunnerBox.style.top = '-60%';
                 
                 clickEnabled = true
                 clickedPlane = null
@@ -730,7 +815,7 @@ timeline.play()
 
 
 
-window.addEventListener('mousemove', hoverSlide)
+// window.addEventListener('mousemove', hoverSlide)
 /**
  * Animate
  */

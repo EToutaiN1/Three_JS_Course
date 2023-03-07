@@ -8,6 +8,17 @@
     src: url('./fonts/Karantina-Regular.ttf') format('truetype');
 }
 
+@keyframes titleApparition {
+    from{
+        opacity: 0;
+        transform: translateY(100vh);
+    } 
+    to{
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
 /* *
 {
     margin: 0;
@@ -113,12 +124,7 @@ body
 
 .logo-block{
     flex-shrink: 1;
-}
-.tunner-block{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
+    width: 9rem;
 }
 
 .navlink{
@@ -127,6 +133,7 @@ body
     align-items: center;
     justify-content: flex-end;
     color: white;
+    width: 9rem;
 }
 
 .navlink a{
@@ -135,6 +142,15 @@ body
     font-family: 'Karantina';
     color: white;
     text-decoration: none;
+}
+
+.tunner-block{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    position: relative;
+    margin-top: 2rem;
 }
 
 .tunner{
@@ -150,4 +166,46 @@ body
 }
 #tunner-click{
     display: none;
+}
+
+#tunner-box{
+    position: absolute;
+    top: -60%;
+    font-family: 'Karantina';
+    font-size: 3rem;
+    transition: all 1s ease-out;
+}
+
+.content-wrapper{
+    position: relative;
+    /* bottom: 0;
+    left: 0;
+    top: 0;
+    right: 0; */
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
+
+#title-period{
+    position: absolute;
+    bottom: 10%;
+    left: 20%;
+    text-transform: uppercase;
+    font-family: 'Karantina';
+    font-size: 7rem;
+    line-height: 0.9;
+    transition: all 500ms ease-out;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(50vh);
+}
+
+#title-period.show{
+    opacity: 1;
+    transform: translateY(0vh);
+}
+
+.stroke-color path{
+    stroke: #F00;
 }

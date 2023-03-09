@@ -6,57 +6,73 @@
         <meta name="description" content="The best chess game in the world !">
         <link rel='icon' href='../images/favicon-rap-station.png' type='image/png'/>
         <title>--- Rap Station ---</title>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
         <link rel="stylesheet" href="./style.css">
-        <link href="./fonts/FR73 Pixel W00 Regular.ttf" rel="stylesheet" type="text/css">
-        <link href="./fonts/Karantina-Light.ttf" rel="stylesheet" type="text/css">
+        <link href="/fonts/FR73 Pixel W00 Regular.ttf" rel="stylesheet" type="text/css">
+        <link href="/fonts/Karantina-Regular.ttf" rel="stylesheet" type="text/css">
     </head>
     <body>
+        <div class="page-wrapper">
+            <div class="section">
+                <div class="navBar">
+                    <div class="container">
+                        <div class="navbar-wrapper">
+                            <a href="#" class="logo-block">
+                                <lottie-interactive path="./animations/logo.json" s-color="#ff0000" loop autoplay id="logo-animated"></lottie-interactive>
+                                <!-- <img src="../static/animations/logo.json" alt="logo animation"> -->
+                            </a>
+                            <div class="tunner-block">
+                                <div id="tunner-box">
+                                    <p id="tunner-text">70'</p>
+                                </div>
+                                <div class="tunner" id="tunner-load"></div>
+                                <div class="tunner" id="tunner-next"></div>
+                                <lottie-interactive path="./animations/tunner-click.json" s-color="#ff0000" loop autoplay id="tunner-click"></lottie-interactive>
+                                <!-- <div class="tunner" id="tunner-click"></div> -->
 
-        <div class="section">
-            <div class="navBar">
-                <div class="container">
-                    <div class="navbar-wrapper">
-                        <a href="#" class="logo-block">
-                            <div id="logo-animated"></div>
-                            <!-- <img src="../static/animations/logo.json" alt="logo animation"> -->
-                        </a>
-                        <div class="tunner-block">
-                            <div id="tunner-box">
-                                <p id="tunner-text">70'</p>
                             </div>
-                            <div class="tunner" id="tunner-load"></div>
-                            <div class="tunner" id="tunner-next"></div>
-                            <div class="tunner" id="tunner-click"></div>
-
-                        </div>
-                        <div class="navlink">
-                            <a href="#">About</a>
+                            <div class="navlink">
+                                <a href="#">About</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="content-wrapper">
-                <h1 id="title-period">The first steps<br>of hip-hop</h1>
-            </div>
-            <div class="btm-wrapper-hero">
-                <div class="container">
-                    <div class="navbar-wrapper">
-                        <div class="logo-block">
-                            <!-- <img src="../static/animations/logo.json" alt="music toggle"> -->
-                        </div>
-                    
-                        <div class="text">
-                            <p>@2023</p>
+                <div class="content-wrapper">
+                    <h1 id="title-period">The first steps<br>of hip-hop</h1>
+                </div>
+                <div class="btm-wrapper-hero">
+                    <div class="container">
+                        <div class="navbar-wrapper">
+                            <div class="music-block">
+                                <audio src="#" id="music-sound" class="active" loop></audio>
+                                <lottie-interactive path="./animations/pause.json" s-color="#ff0000" loop autoplay id="pause"></lottie-interactive>
+                                <lottie-interactive path="./animations/play.json" s-color="#ff0000" loop autoplay id="play"></lottie-interactive>
+                                <!-- <div id="play"></div>
+                                <div id="pause"></div> -->
+                                <!-- <img src="../static/animations/logo.json" alt="music toggle"> -->
+                            </div>
+                            <a href="#" class="discover-block">
+                                <lottie-interactive path="./animations/discover-hover.json" s-color="#ff0000" loop autoplay id="discover-hover"></lottie-interactive>
+                                <lottie-interactive path="./animations/discover-load.json" s-color="#ff0000" loop autoplay id="discover-load"></lottie-interactive>
+                                <!-- <div id="discover-hover"></div>
+                                <div id="discover-load"></div> -->
+                            </a>
+                        
+                            <div class="text">
+                                <p>@2023</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+
         <!-- <div class="circle">circle red</div> -->
         <canvas class="webgl"></canvas>
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script> -->
+        <!-- <script type="module" src="https://unpkg.com/lottie-interactive"></script> -->
+        <script type="module" src="https://unpkg.com/lottie-interactive@latest/dist/lottie-interactive.js"></script>
         <script type="module" src="./script.js"></script>
     </body>
 </html>

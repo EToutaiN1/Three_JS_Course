@@ -1,10 +1,12 @@
 import * as THREE from 'three'
 import * as dat from 'lil-gui'
-import * as bodymovin from 'lottie-web'
+// import * as bodymovin from 'lottie-web'
 import { Vector2 } from 'three'
 import { gsap } from 'gsap';
 import vertexShader from './shaders/slide-period/vertex.glsl'
 import fragmentShader from './shaders/slide-period/fragment.glsl'
+import { LottieInteractive } from 'lottie-interactive';
+
 
 /**
  * Base
@@ -24,12 +26,27 @@ let alreadyClicked = false;
 
 let isRepeated = false;
 
+// Set the initial progress of the animation to 0
+let animationTunnerProgress = 0;
+
 let clickedId;
+
+const pageWrapper = document.querySelector('.section')
+
+const musicSound = document.getElementById('music-sound');
+
+const musicBlock = document.querySelector('.music-block')
+const playBlock = document.getElementById('play');
+const pauseBlock = document.getElementById('pause');
 
 const titleElement = document.getElementById('title-period');
 
 const tunnerBox = document.getElementById('tunner-box')
 const tunnerText = document.getElementById('tunner-text')
+
+const discoverBlock = document.querySelector('.discover-block')
+const discoverLoadItem = document.querySelector('#discover-load')
+const discoverHoverItem = document.querySelector('#discover-hover')
 
 let animation = []
 
@@ -49,10 +66,6 @@ let logoAnimate = bodymovin.loadAnimation({
     
 });
 
-
-
-// animation.push(logoAnimate)
-
 let tunnerLoad = bodymovin.loadAnimation({
     
     container: document.getElementById('tunner-load'),
@@ -69,6 +82,7 @@ let tunnerLoad = bodymovin.loadAnimation({
     
 });
 
+
 let tunnerNext = bodymovin.loadAnimation({
 
     container: document.getElementById('tunner-next'),
@@ -78,8 +92,6 @@ let tunnerNext = bodymovin.loadAnimation({
     renderer: 'svg',
     
     loop: false,
-
-    // loopTime: 1.5,
     
     autoplay: false,
     
@@ -102,9 +114,118 @@ let tunnerClick = bodymovin.loadAnimation({
     name: "Tunner click Animation",
 });
 
-animation.push(logoAnimate, tunnerLoad, tunnerNext, tunnerClick)
+let playMusic = bodymovin.loadAnimation({
 
-console.log(animation);
+    container: document.getElementById('play'),
+    
+    path: '../animations/play.json',
+    
+    renderer: 'svg',
+    
+    loop: false,
+    
+    autoplay: false,
+    
+    name: "Play Music Animation",
+});
+
+let pauseMusic = bodymovin.loadAnimation({
+
+    container: document.getElementById('pause'),
+    
+    path: '../animations/pause.json',
+    
+    renderer: 'svg',
+    
+    loop: false,
+    
+    autoplay: false,
+    
+    name: "Pause Music Animation",
+});
+
+let discoverLoad = bodymovin.loadAnimation({
+    
+    container: document.getElementById('discover-load'),
+    
+    path: '../animations/discover-load.json',
+    
+    renderer: 'svg',
+    
+    loop: false,
+    
+    autoplay: false,
+    
+    name: "Discover load Animation"
+});
+
+let discoverHover = bodymovin.loadAnimation({
+    
+    container: document.getElementById('discover-hover'),
+    
+    path: '../animations/discover-hover.json',
+    
+    renderer: 'svg',
+    
+    loop: false,
+    
+    autoplay: false,
+    
+    name: "Discover hover Animation"
+});
+
+// let starAnimation = bodymovin.loadAnimation({
+
+//     container: document.querySelector('.page-wrapper'),
+    
+//     path: '../animations/star.json',
+    
+//     renderer: 'svg',
+    
+//     loop: true,
+    
+//     autoplay: true,
+    
+//     name: "Star Animation",
+// });
+
+// for (let s = 0; s < 30; s++) {
+//     let container = document.createElement('div');
+//     container.classList.add('star-container');
+//     pageWrapper.appendChild(container);
+
+//     // Add the star animation to the container
+//     let starAnimation = bodymovin.loadAnimation({
+//         container: container,
+//         path: '../animations/star.json',
+//         renderer: 'svg',
+//         loop: true,
+//         autoplay: true,
+//         name: "Star Animation"
+//     });
+
+//     // Set a random position and scale for the animation
+//     let xPos = Math.random() * pageWrapper.clientWidth;
+//     let yPos = Math.random() * pageWrapper.clientHeight;
+//     let scale = Math.random() * 0.5 + 0.5; // Random scale between 0.5 and 1.0
+//     console.log(container);
+//     container.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale})`;
+    
+//     // // Set a random color for the animation
+//     // let color = Math.random() < 0.5 ? '#fff' : '#f00'; // Randomly choose between #fff and #f00
+//     // starAnimation.renderer.elements[0].setStyle('fill', color);
+// }
+
+animation.push(logoAnimate, tunnerLoad, tunnerNext, tunnerClick, playMusic, pauseMusic)
+
+console.log(LottieInteractive);
+
+// let lottieInteractives = [];
+// animation.forEach(function(anim) {
+//   let lottieInteractive = LottieInteractive.fromAnimation(anim, anim.container);
+//   lottieInteractives.push(lottieInteractive);
+// });
+
 
 // Debug
 const gui = new dat.GUI()
@@ -194,6 +315,45 @@ const rapPeriodData = {
         period: "00'",
         urlPeriod: 'raps-station.webflow.io/post-2000'
     },
+}
+
+musicBlock.addEventListener('click', ()=> {
+    musicSound.classList.toggle('active')
+    if(musicSound.classList.contains('active')) {
+        pauseMusic.setDirection(-1)
+        pauseMusic.play()
+        setTimeout(() => {
+            playBlock.style.display = 'block';
+            pauseBlock.style.display = 'none';
+        }, 1800);
+        setTimeout(() => {
+            playMusic.setDirection(1)
+            playMusic.play()
+        }, 1900);
+        console.log('play');
+        // playAudio(musicSound);
+    } else {
+        console.log('pause');
+        playMusic.setDirection(-1)
+        playMusic.play()
+        setTimeout(() => {
+            playBlock.style.display = 'none';
+            pauseBlock.style.display = 'block';
+        }, 1800);
+        setTimeout(() => {
+            pauseMusic.setDirection(1)
+            pauseMusic.play()
+        }, 1900);
+        // pauseAudio(musicSound);
+    }
+})
+
+function playAudio(sound) {
+sound.play();
+}
+
+function pauseAudio(sound) {
+sound.pause();
 }
 
 /**
@@ -310,23 +470,61 @@ const scrollEvent = (e) => {
 
     if (scrollEnabled){
         // Otherwise, scroll normally
-        speed += -e.deltaY * 0.0003;
+        speed -= e.deltaY * 0.00015;
+
+        // Get the current vertical scroll position
+        // const scrollPosition = Math.round(Math.abs(position));
+
+        let direction = e.deltaY > 0 ? 1 : -1;
+
+        console.log(e.deltaY);
+
+        slides.forEach(s => {
+            console.log(Math.round(s.slide.position.x))
+            if(Math.round(s.slide.position.x) == 0){
+                console.log('position 0');
+                // Play the tunnerNext animation
+                if(direction == 1){
+                    tunnerNext.goToAndStop(0)
+                    tunnerNext.setDirection(1)
+                    tunnerNext.setSpeed(speed); 
+                    tunnerNext.play();
+                }
+                if(direction == -1){
+                    tunnerNext.goToAndStop(0)
+                    tunnerNext.setDirection(-1)
+                    tunnerNext.setSpeed(speed); 
+                    tunnerNext.play();
+                }
+                
+            }
+        });
         
         // console.log(Math.abs(position));
 
-        // Get the current vertical scroll position
-        const scrollPosition = Math.abs(position);
+        // if (e.deltaY != 0) {
+        //     // Calculate the direction of the scroll (positive or negative)
+        //     let direction = e.deltaY > 0 ? 1 : -1;
 
-        // console.log(tunnerNext);
-        // console.log(scrollPosition);
+        //     console.log(e.deltaY);
+        //     console.log(position);
+        //     // Calculate the amount of the scroll (as a fraction of the viewport height)
+        //     let scrollAmount = Math.abs(e.deltaY) / sizes.height;
+        //     // Update the animation's progress based on the direction and amount of the scroll
+        //     animationTunnerProgress += direction * scrollAmount;
+        //     // Clamp the animation's progress to the range [0, 1]
+        //     animationTunnerProgress = Math.min(1, Math.max(0, animationTunnerProgress));
+        //     // Set the animation's progress using the `setanimationTunnerProgress` method
+        //     tunnerNext.goToAndStop(animationTunnerProgress * tunnerNext.getDuration(true), true);
+        //   }
 
         // Calculate the desired progress of the tunnerNext animation
-        const animationDuration = tunnerNext.totalFrames / tunnerNext.frameRate;
-        const animationProgress = Math.min((scrollPosition / animationDuration), 1);
-        const animationFrame = Math.round(animationProgress * tunnerNext.totalFrames);
+        // const animationDuration = tunnerNext.totalFrames / tunnerNext.frameRate;
+        // const animationProgress = Math.min((scrollPosition / animationDuration), 1);
+        // const animationFrame = Math.round(animationProgress * tunnerNext.totalFrames);
 
-        // Set the current frame of the tunnerNext animation
-        tunnerNext.goToAndStop(animationFrame);
+        // // Set the current frame of the tunnerNext animation
+        // tunnerNext.goToAndStop(animationFrame);
     }
 
     if(!clickEnabled){
@@ -420,7 +618,7 @@ const handlePlaneClick = (event) => {
                 // console.log(url);
 
                 // Update the link for the button
-                // button.href = url;
+                discoverBlock.href = url;
 
                 // Hide the tunnerNext element
                 tunnerNextItem.style.display = 'none';
@@ -431,6 +629,34 @@ const handlePlaneClick = (event) => {
                 // Play the tunnerClick animation
                 tunnerClick.setDirection(1);
                 tunnerClick.play();
+
+                discoverLoadItem.style.display = 'block'
+
+                discoverLoad.setDirection(1);
+                discoverLoad.play();
+
+                setTimeout(() => {
+                    discoverLoadItem.style.display = 'none';
+                    discoverHoverItem.style.display = 'block';
+                }, 2000);
+
+                discoverBlock.addEventListener('mouseenter', () => {
+                    discoverLoadItem.style.display = 'none';
+                    discoverHoverItem.style.display = 'block';
+                    discoverHover.setDirection(1)
+                    discoverHover.play()
+                    console.log('play');
+                })
+
+                discoverBlock.addEventListener('mouseleave', () => {
+                    discoverHover.setDirection(-1)
+                    discoverHover.play()
+                    setTimeout(()=>{
+                        discoverLoadItem.style.display = 'block';
+                        discoverHoverItem.style.display = 'none';
+                    }, 700)
+                })
+
                 
                 console.log(clickedPlane);
                 
@@ -583,22 +809,22 @@ const handlePlaneClick = (event) => {
 
             tunnerBox.style.top = '-20%';
 
-            // Stop listening to click events for the different slides
-            window.removeEventListener('click', handlePlaneClick);
-            console.log('plane click event disabled');
-    
-            // Start listening to click events outside of the clicked plane
-            window.addEventListener('click', handleOutsideClick);
-            console.log('outside click event enabled');
+            setTimeout(() => {
+                // Stop listening to click events for the different slides
+                window.removeEventListener('click', handlePlaneClick);
+                console.log('plane click event disabled');
+                
+                // Start listening to click events outside of the clicked plane
+                window.addEventListener('click', handleOutsideClick);
+                console.log('outside click event enabled');
+            }, 1000);
         }
 
 
     }
 };
 
-console.log(document.querySelectorAll('.stroke-color'));
-
-window.addEventListener('click', handlePlaneClick)
+// console.log(document.querySelectorAll('.stroke-color'));
 
 const scrollWhilePlaneClicked = () => {
 
@@ -617,7 +843,31 @@ const scrollWhilePlaneClicked = () => {
         // Show the tunnerNext element
         tunnerNextItem.style.display = 'block';
     }, 1300);
+                
+    discoverLoadItem.style.display = 'block';
+
+    discoverLoad.setDirection(-1)
+    discoverLoad.play()
+
+    setTimeout(() => {
+        discoverLoadItem.style.display = 'none';
+        discoverBlock.removeEventListener('mouseenter')
+        discoverBlock.removeEventListener('mouseleave')
+    }, 2000);
     
+    // Animate the color change of HTML elements
+    gsap.to('.navlink a', {
+        color: '#F2F2F2',
+        duration: 1,
+        ease: "power3.out"
+    });
+    
+    gsap.to('p', {
+        color: '#F2F2F2',
+        duration: 1,
+        ease: "power3.out"
+    });
+
     // Reset slides size and position
     slides.forEach((p) => {
         gsap.to(p.slide.scale, {
@@ -665,13 +915,15 @@ const scrollWhilePlaneClicked = () => {
     // Toggle the repeat flag
     isRepeated = !isRepeated;
 
-    // Start listening to click events outside of the clicked plane
-    window.addEventListener('click', handlePlaneClick)
-    console.log('Out side : plane click event enabled');
-    
-    // Stop listening to click events outside of the clicked plane
-    window.removeEventListener('click', handleOutsideClick);
-    console.log('Out side : outside click event disabled');
+    setTimeout(() => {
+        // Start listening to click events outside of the clicked plane
+        window.addEventListener('click', handlePlaneClick)
+        console.log('Out side : plane click event enabled');
+        
+        // Stop listening to click events outside of the clicked plane
+        window.removeEventListener('click', handleOutsideClick);
+        console.log('Out side : outside click event disabled');
+    }, 1300);
 }
 
 // Handle click outside of clicked plane
@@ -711,9 +963,33 @@ const handleOutsideClick = (event) => {
                     tunnerNextItem.style.display = 'block';
                 }, 1300);
 
+                discoverLoadItem.style.display = 'block';
+
+                discoverLoad.setDirection(-1)
+                discoverLoad.play()
+
+                setTimeout(() => {
+                    discoverLoadItem.style.display = 'none';
+                    discoverBlock.removeEventListener('mouseenter')
+                    discoverBlock.removeEventListener('mouseleave')
+                }, 2000);
+
                 titleElement.classList.remove('show');
 
                 console.log('handle outside click');
+
+                // Animate the color change of HTML elements
+                gsap.to('.navlink a', {
+                    color: '#F2F2F2',
+                    duration: 1,
+                    ease: "power3.out"
+                });
+                
+                gsap.to('p', {
+                    color: '#F2F2F2',
+                    duration: 1,
+                    ease: "power3.out"
+                });
 
                 // Reset slides size and position
                 slides.forEach((p) => {
@@ -762,13 +1038,15 @@ const handleOutsideClick = (event) => {
                 // Toggle the repeat flag
                 isRepeated = !isRepeated;
 
-                // Start listening to click events outside of the clicked plane
-                window.addEventListener('click', handlePlaneClick)
-                console.log('Out side : plane click event enabled');
-                
-                // Stop listening to click events outside of the clicked plane
-                window.removeEventListener('click', handleOutsideClick);
-                console.log('Out side : outside click event disabled');
+                setTimeout(() => {
+                    // Start listening to click events outside of the clicked plane
+                    window.addEventListener('click', handlePlaneClick)
+                    console.log('Out side : plane click event enabled');
+                    
+                    // Stop listening to click events outside of the clicked plane
+                    window.removeEventListener('click', handleOutsideClick);
+                    console.log('Out side : outside click event disabled');
+                }, 1300);
             }
     }
 };
@@ -783,6 +1061,29 @@ window.addEventListener('load', () => {
     // Play the tunnerLoad animation
     tunnerLoad.play();
 
+    // Play the music animation
+    playMusic.setDirection(1)
+    playMusic.play()
+
+    // create a timeline for the slide animations
+    const timeline = gsap.timeline({ delay: 2.5 });
+
+    // animate each slide
+    slides.forEach((o) => {
+    // set the initial position of the slide
+    gsap.set(o.slide.position, { y: -2 });
+
+    // animate the slide to its final position
+    timeline.to(o.slide.position, {
+        duration: 2,
+        y: 0,
+        ease: "power4.out",
+    }, "-=1.5"); // start the animation 0.6s before the end of the previous animation
+    });
+
+    timeline.play()
+
+
     setTimeout(() => {
         // Hide the tunnerLoad element
         tunnerLoadItem.style.display = 'none';
@@ -790,30 +1091,10 @@ window.addEventListener('load', () => {
         // Show the tunnerNext element
         tunnerNextItem.style.display = 'block';
 
-        // Play the tunnerNext animation
-        tunnerNext.play();
-    }, 2000);
+        
+    window.addEventListener('click', handlePlaneClick)
+    }, 1300);
 });
-
-// create a timeline for the slide animations
-const timeline = gsap.timeline({ delay: 2.5 });
-
-// animate each slide
-slides.forEach((o) => {
-  // set the initial position of the slide
-  gsap.set(o.slide.position, { y: -2 });
-
-  // animate the slide to its final position
-  timeline.to(o.slide.position, {
-    duration: 2,
-    y: 0,
-    ease: "power4.out",
-  }, "-=1.5"); // start the animation 0.6s before the end of the previous animation
-});
-
-timeline.play()
-
-
 
 // window.addEventListener('mousemove', hoverSlide)
 /**

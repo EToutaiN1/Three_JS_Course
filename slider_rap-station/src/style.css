@@ -103,6 +103,13 @@ body
     left: 0%;
     bottom: 3%;
     right: 0%;
+    z-index: 1000;
+}
+
+.text{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .container{
@@ -168,6 +175,17 @@ body
     display: none;
 }
 
+.discover-block{
+    width: 10rem;
+}
+#discover-load{
+    display: block;
+}
+#discover-hover{
+    display: none;
+}
+
+
 #tunner-box{
     position: absolute;
     top: -60%;
@@ -209,3 +227,20 @@ body
 .stroke-color path{
     stroke: #F00;
 }
+
+.music-block{
+    width: 6rem;
+}
+
+#play{
+    display: block;
+}
+
+#pause{
+    display: none;
+}
+
+.star-container{
+    width: 3rem;
+}
+
